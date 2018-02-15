@@ -68,3 +68,47 @@ mtype
 matrix_type(const matrix *m)
 { return m->type;
 }
+
+size_t
+matrix_size(const matrix *m)
+{ if ( m->ndim > 0 )
+  { size_t s = m->dim[0];
+
+    for(size_t i=1; i<m->ndim; i++)
+      s *= m->dim[i];
+
+    return s;
+  }
+
+  return 0;
+}
+
+static inline m_int *
+matrix_ints(const matrix *m)
+{ return (m_int*)((const char*)m + SIZEOF_MHEADER(m->ndim));
+}
+
+static inline m_float *
+matrix_floats(const matrix *m)
+{ return (m_float*)((const char*)m + SIZEOF_MHEADER(m->ndim));
+}
+
+
+void
+matrix_set_all_ints(matrix *m, m_int v)
+{ m_int *vs = matrix_ints(m);
+  size_t size = matrix_size(m);
+
+  for(size_t i=0; i<size; i++)
+    vs[i] = v;
+}
+
+void
+matrix_set_all_floats(matrix *m, m_float v)
+{ m_float *vs = matrix_floats(m);
+  size_t size = matrix_size(m);
+
+  for(size_t i=0; i<size; i++)
+    vs[i] = v;
+}
+
